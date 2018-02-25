@@ -1,25 +1,83 @@
-//log into websta.me account & go to My Likes Page
+/*
+
+> Get all lists of 20 URLs from html
+> save all those to disk
+> filenames cannot be changed as it is present in header & also cross-origin
+*/
+
+/*configrables*/
 var className = "is-photo";
+
+/*configrables ENDS*/
+var tStart = new Date(); //start time
+var url = window.location.href;
+if(url.search("https://websta.me/self/liked") == -1)
+  throw new Error("this snippet works only at https://websta.me/self/liked. Please log into your websta.me account & then go to \"Liked\" Page.");
 var imgs = document.getElementsByClassName(className);
-var fUrl, fName;
+if(imgs.length === 0)
+  throw new Error("No Photos Found. Please check if className is " + className); 
+
+var fUrl, fName, id, user, liked, log="", nl="\r\n", line=nl + "-".repeat(10);
+
 for(var i=0;i<imgs.length;i++){
   fUrl = imgs[i].currentSrc;
   fName = fUrl.split("/").pop().toLowerCase();
+  id = imgs[i].parentElement.href.split("/").pop();
+  user = imgs[i]
+          .parentElement.parentElement.parentElement
+          .children[1].children[0].children[0].children[0].children[1].innerText || "not found";
+  liked = imgs[i]
+            .parentElement.parentElement.parentElement
+            .children[1].children[0].children[0].children[0].children[2]
+            .dataset.originalTitle  || "not found";
   saveToDisk(fUrl, fName);
+  
+
+  log += nl + "URL:     "+ fUrl;
+  log += nl + "Name:    "+ fName;
+  log += nl + "ID:      "+ id;
+  log += nl + "User:    "+ user;
+  log += nl + "LikedOn: "+ liked;
+  log += line;
+  
+  //break;
 }
 
+var tEnd = new Date();
+var time = parseFloat(tEnd.getTime() - tStart.getTime()).toFixed(2) + " seconds";
+
+var stats = "";
+
+stats += tStart; //auto formatted
+stats += nl + "Time:    " + time;
+stats += line;
+log = stats + log;
+
+//save log file as text
+var logName = tStart.toISOString().split(".");
+console.log(logName);
+
+logName = logName[0].replace(/[:\-\.]/gi,  "");
+logName = logName.replace("T", "_");
+logName = "Log "+ logName + ".txt";
+
+var link = document.createElement('a');
+link.download = logName;
+var blob = new Blob([log], {type: 'text/plain'});
+link.href = window.URL.createObjectURL(blob);
+link.click();
 
 //document.getElementsByClassName("is-photo")[3].currentSrc;
 
 //saveToDisk("https://scontent.cdninstagram.com/vp/58bf6d023bf6a3bcfd977c421db0870e/5B2A1DD1/t51.2885-15/s640x640/sh0.08/e35/23596250_131891764187806_842321195020845056_n.jpg", "test");
+
 function saveToDisk(fileUrl, fileName ) {
+  //console.log("url="+fileUrl + " Name="+ fileName);
   var hyperlink = document.createElement('a');
   hyperlink.href = fileUrl;
   hyperlink.target = '_blank';
   hyperlink.download = fileName || fileUrl;
-
-  console.log( /*app.dowloaded.length +*/ ') download', hyperlink.download );
-
+  
   var mouseEvent = new MouseEvent('click', {
     view: window,
     bubbles: true,
@@ -28,12 +86,18 @@ function saveToDisk(fileUrl, fileName ) {
 
   hyperlink.dispatchEvent(mouseEvent);
   (window.URL || window.webkitURL).revokeObjectURL(hyperlink.href);
-  return fileUrl;
+  //return fileUrl;
 }
+
+
+saveToDisk(1,2);
+saveToDisk(2,3);
+
 
 
 /*####################################################################################################################*/
 //appspot compiled pretty print advanced
+var a = new Date;
 if (-1 == window.location.href.search("https://websta.me/self/liked")) {
   throw Error('this snippet works only at https://websta.me/self/liked. Please log into your websta.me account & then go to "Liked" Page.');
 }
@@ -41,25 +105,42 @@ var b = document.getElementsByClassName("is-photo");
 if (0 === b.length) {
   throw Error("No Photos Found. Please check if className is is-photo");
 }
-for (var c, d, e = 0; e < b.length; e++) {
-  c = b[e].currentSrc, d = c.split("/").pop().toLowerCase(), f(c, d);
+for (var c, d, f, g, h, k = "", l = "\r\n" + "-".repeat(10), m = 0; m < b.length; m++) {
+  c = b[m].currentSrc, d = c.split("/").pop().toLowerCase(), f = b[m].parentElement.href.split("/").pop(), g = b[m].parentElement.parentElement.parentElement.children[1].children[0].children[0].children[0].children[1].innerText || "not found", h = b[m].parentElement.parentElement.parentElement.children[1].children[0].children[0].children[0].children[2].dataset.a || "not found", n(c, d), k += "\r\nURL:     " + c, k += "\r\nName:    " + d, k += "\r\nID:      " + f, k += "\r\nUser:    " + g, k += "\r\nLikedOn: " + 
+  h, k += l;
 }
-function f(g, h) {
-  var a = document.createElement("a");
-  a.href = g;
-  a.target = "_blank";
-  a.download = h || g;
-  var k = new MouseEvent("click", {view:window, bubbles:!0, cancelable:!0});
-  a.dispatchEvent(k);
-  (window.URL || window.webkitURL).revokeObjectURL(a.href);
+var p = parseFloat((new Date).getTime() - a.getTime()).toFixed(2) + " seconds", q = "";
+q += a;
+q += "\r\nTime:    " + p;
+q += l;
+k = q + k;
+var r = a.toISOString().split(".");
+console.log(r);
+r = r[0].replace(/[:\-\.]/gi, "");
+r = r.replace("T", "_");
+r = "Log " + r + ".txt";
+var u = document.createElement("a");
+u.download = r;
+u.href = window.URL.createObjectURL(new Blob([k], {type:"text/plain"}));
+u.click();
+function n(t, v) {
+  var e = document.createElement("a");
+  e.href = t;
+  e.target = "_blank";
+  e.download = v || t;
+  var w = new MouseEvent("click", {view:window, bubbles:!0, cancelable:!0});
+  e.dispatchEvent(w);
+  (window.URL || window.webkitURL).revokeObjectURL(e.href);
 }
-f(1, 2);
-f(2, 3);
+n(1, 2);
+n(2, 3);
 
 /*####################################################################################################################*/
 //appspot compiled advanced
-if(-1==window.location.href.search("https://websta.me/self/liked"))throw Error('this snippet works only at https://websta.me/self/liked. Please log into your websta.me account & then go to "Liked" Page.');var b=document.getElementsByClassName("is-photo");if(0===b.length)throw Error("No Photos Found. Please check if className is is-photo");for(var c,d,e=0;e<b.length;e++)c=b[e].currentSrc,d=c.split("/").pop().toLowerCase(),f(c,d);
-function f(g,h){var a=document.createElement("a");a.href=g;a.target="_blank";a.download=h||g;var k=new MouseEvent("click",{view:window,bubbles:!0,cancelable:!0});a.dispatchEvent(k);(window.URL||window.webkitURL).revokeObjectURL(a.href)}
+var a=new Date;if(-1==window.location.href.search("https://websta.me/self/liked"))throw Error('this snippet works only at https://websta.me/self/liked. Please log into your websta.me account & then go to "Liked" Page.');var b=document.getElementsByClassName("is-photo");if(0===b.length)throw Error("No Photos Found. Please check if className is is-photo");
+for(var c,d,f,g,h,k="",l="\r\n"+"-".repeat(10),m=0;m<b.length;m++)c=b[m].currentSrc,d=c.split("/").pop().toLowerCase(),f=b[m].parentElement.href.split("/").pop(),g=b[m].parentElement.parentElement.parentElement.children[1].children[0].children[0].children[0].children[1].innerText||"not found",h=b[m].parentElement.parentElement.parentElement.children[1].children[0].children[0].children[0].children[2].dataset.a||"not found",n(c,d),k+="\r\nURL:     "+c,k+="\r\nName:    "+d,k+="\r\nID:      "+f,k+="\r\nUser:    "+
+g,k+="\r\nLikedOn: "+h,k+=l;var p=parseFloat((new Date).getTime()-a.getTime()).toFixed(2)+" seconds",q="";q+=a;q+="\r\nTime:    "+p;q+=l;k=q+k;var r=a.toISOString().split(".");console.log(r);r=r[0].replace(/[:\-\.]/gi,"");r=r.replace("T","_");r="Log "+r+".txt";var u=document.createElement("a");u.download=r;u.href=window.URL.createObjectURL(new Blob([k],{type:"text/plain"}));u.click();
+function n(t,v){var e=document.createElement("a");e.href=t;e.target="_blank";e.download=v||t;var w=new MouseEvent("click",{view:window,bubbles:!0,cancelable:!0});e.dispatchEvent(w);(window.URL||window.webkitURL).revokeObjectURL(e.href)}
 
 /*####################################################################################################################*/
 //mrcoles bookmarklet
